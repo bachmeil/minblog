@@ -1,0 +1,101 @@
+<blog title="minblog Overview">
+This file is called minblog, for "minimalist blog". It's my attempt at creating the simplest possible blogging framework that meets these conditions:
+
+- No build step
+- Markdown support
+- Math equation support
+- Automatic generation of the list of posts
+- No need to learn an obscure syntax to enter posts
+
+# Installation
+
+There is no installation.
+
+# Usage
+
+Open this file in a text editor. To add a new post, go to the top and type
+
+<code><pre>
+&lt;blog title="..."&gt;
+</pre></code>
+
+where the `...` is the title of your post.
+
+Then type your blog post in markdown format.
+
+Then add a closing tag:
+
+<code><pre>
+&lt;/blog&gt;
+</pre></code>
+
+Finally, open the file in a web browser.
+</blog>
+
+<blog title="This thing has markdown support">
+You can put markdown in here as long you don't close out the `blog` tag.
+
+- Lists work
+- Even has math support: $y_{t} = \xi_{t}$.
+
+The markdown variant I'm using is [markdown-it](https://github.com/markdown-it/markdown-it). You can see below the links used to load the library. If you want to use a different markdown library, all you have to do is delete the markdown-it lines and add your own. Further, markdown-it comes with math support, so katex is loaded. You can delete those two lines below if you don't plan to use math in your blog.
+
+The only place the markdown library is called is the `md.render` call in the `changecontent` function. If you change markdown libraries, you'll need to change that call.
+</blog>
+
+<blog title="There's almost no CSS">
+There's very little CSS in here:
+
+- Widescreen monitors these days are *too wide* to go without some limits.
+- Links do not look good with underlines on here. I use underlines in some of my own html pages, but you don't want them here, where links are used for lists of blog posts.
+- It's dead simple to change the styling yourself.
+  - Go to the `style` tag below.
+  - Add the CSS you want.
+  - Profit.
+  - Use [W3Schools](https://www.w3schools.com) if you're not sure how to add particular CSS.
+</blog>
+
+<body onhashchange="changecontent()">
+<div id="content" class="content"></div>
+<div id="footer"></div>
+</body>
+
+<link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.2.0/markdown-it.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+
+<script>
+var md = markdownit({html: true}).use(texmath, { engine: katex });
+for (post of document.getElementsByTagName("blog")) {
+  post.style = "display:none";
+}
+
+var arr = new Array();
+var index = 0;
+var menu = "<ul>";
+for (post of document.getElementsByTagName("blog")) {
+  arr[index] = {title: post.getAttribute("title"), content: post.innerHTML};
+  menu += "<li><a href='#" + index + "'>" + post.getAttribute("title") + "</a></li>";
+  index += 1;
+}
+menu += "</ul>";
+document.getElementById("content").innerHTML = "<h1>Posts</h1>" + menu;
+console.log(arr);
+
+function changecontent() {
+  var post = arr[location.hash.substring(1)];
+  document.getElementById("content").innerHTML = md.render("# " + post.title + "\n\n" + post.content + "\n\n[Menu]()");
+}
+</script>
+<style>
+body {
+  max-width: 760px;
+  margin: auto;
+}
+
+a {
+  text-decoration: none;
+}
+</style>
