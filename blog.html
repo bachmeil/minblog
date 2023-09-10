@@ -1,11 +1,20 @@
 <blog title="minblog Overview">
-This file is called minblog, for "minimalist blog". It's my attempt at creating the simplest possible blogging framework that meets these conditions:
+This file is called minblog, short for "minimalist blog". It's an attempt at creating the simplest possible blogging framework that meets these conditions:
 
 - No build step
 - Markdown support
 - Math equation support
 - Automatic generation of the list of posts
 - No need to learn an obscure syntax to enter posts
+- Everything in a single file - you should be able to email the full blog to someone else, or download it using the Save As option in the browser.
+
+# Motivation
+
+It's common to hear that hosting your own blog is only for programmers and other technical folk. They're told to sign up for a hosted solution such as wordpress.com. They're told that it would be too much of a technical hurdle for them to do anything other than dumping their data into someone else's walled garden. I strongly disagree. Options like Wordpress do nothing to free you from having to learn a new technology. They free you from *installing software*, but after you've signed up for your account, you're right back to learning a bunch of technical details.
+
+Anyone capable of using WordPress can host their own blog on Github Pages. They can open a Github account, they can click the buttons to create a new repo, and they can click the buttons to turn on Github Pages. Anyone claiming otherwise needs to get out of the basement and talk to humans in real life from time to time.
+
+Once they've created their repo, they can either use the online Github editor or they can work locally and upload their edited file. The few people that can't do that are surely not able to use Wordpress.
 
 # Installation
 
@@ -15,21 +24,17 @@ There is no installation.
 
 Open this file in a text editor. To add a new post, go to the top and type
 
-<code><pre>
+```
 &lt;blog title="..."&gt;
-</pre></code>
+```
 
-where the `...` is the title of your post.
+where the `...` is the title of your post. Type your post in markdown format. When you're done, add a closing tag:
 
-Then type your blog post in markdown format.
-
-Then add a closing tag:
-
-<code><pre>
+```
 &lt;/blog&gt;
-</pre></code>
+```
 
-Finally, open the file in a web browser.
+Open the file in a web browser.
 </blog>
 
 <blog title="This thing has markdown support">
@@ -60,18 +65,31 @@ There's very little CSS in here:
 <div id="footer"></div>
 </body>
 
+<style>
+body {
+  max-width: 760px;
+  margin: auto;
+  margin-bottom: 125px;
+}
+
+a {
+  text-decoration: none;
+}
+</style>
+
+<script>
+for (post of document.getElementsByTagName("blog")) {
+  post.style = "display:none";
+}
+</script>
+
 <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.2.0/markdown-it.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
-
 <script>
 var md = markdownit({html: true}).use(texmath, { engine: katex });
-for (post of document.getElementsByTagName("blog")) {
-  post.style = "display:none";
-}
-
 var arr = new Array();
 var index = 0;
 var menu = "<ul>";
@@ -82,20 +100,9 @@ for (post of document.getElementsByTagName("blog")) {
 }
 menu += "</ul>";
 document.getElementById("content").innerHTML = "<h1>Posts</h1>" + menu;
-console.log(arr);
 
 function changecontent() {
   var post = arr[location.hash.substring(1)];
   document.getElementById("content").innerHTML = md.render("# " + post.title + "\n\n" + post.content + "\n\n[Menu]()");
 }
 </script>
-<style>
-body {
-  max-width: 760px;
-  margin: auto;
-}
-
-a {
-  text-decoration: none;
-}
-</style>
